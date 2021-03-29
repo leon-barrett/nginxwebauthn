@@ -12,7 +12,7 @@ setuptools.setup(
      long_description_content_type="text/markdown",
      url="https://github.com/jan-vite/nginxwebauthn",
      packages=setuptools.find_packages(),
-     install_requires=['fido2==0.6.0'],
+     install_requires=['fido2==0.8.1'],
      classifiers=[
          "Programming Language :: Python :: 3",
          "Operating System :: OS Independent",

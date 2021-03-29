@@ -12,7 +12,7 @@ import glob
 
 
 from fido2.client import ClientData
-from fido2.server import U2FFido2Server, RelyingParty
+from fido2.server import U2FFido2Server, PublicKeyCredentialRpEntity
 from fido2.ctap2 import AttestationObject, AttestedCredentialData, AuthenticatorData
 from fido2 import cbor
 
@@ -163,7 +163,7 @@ class AuthHandler(http.server.BaseHTTPRequestHandler):
         origin = self.headers.get('Origin')
         host = origin[len('https://'):]
 
-        rp = RelyingParty(host, 'NGINX Auth Server')
+        rp = PublicKeyCredentialRpEntity(host, 'NGINX Auth Server')
         server = U2FFido2Server(origin, rp)
 
         if self.path == HTTP_PREFIX + "/get_challenge_for_new_key":
