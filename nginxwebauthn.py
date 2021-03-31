@@ -257,7 +257,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "save-client":
     client_data = ClientData(base64.b64decode(sys.argv[3]))
     attestation_object = AttestationObject(base64.b64decode(sys.argv[4]))
 
-    rp = RelyingParty(host, 'NGINX Auth Server')
+    rp = PublicKeyCredentialRpEntity(host, 'NGINX Auth Server')
     server = U2FFido2Server('https://' + host, rp)
 
     with open(LASTCHALLENGE) as f:
