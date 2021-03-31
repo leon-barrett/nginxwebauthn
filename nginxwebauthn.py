@@ -56,17 +56,24 @@ async function configure() {
         json.publicKey.challenge = atobarray(json.publicKey.challenge)
         json.publicKey.allowCredentials.forEach(function(cred){cred.id = atobarray(cred.id)})
         json.publicKey.rpId = json.publicKey.rpId.split(":")[0]
-        let result = await navigator.credentials.get(json)
-        await fetch('%s/complete_challenge_for_existing_key', { method: 'POST', body: JSON.stringify({
-          id: barraytoa(result.rawId),
-          authenticatorData: barraytoa(result.response.authenticatorData),
-          clientDataJSON: barraytoa(result.response.clientDataJSON),
-          signature: barraytoa(result.response.signature)
-        }), headers:{ 'Content-Type': 'application/json' }})
-        window.location.href = "/"
+        json.publicKey.userVerification = 'discouraged';
+        try {
+            let result = await navigator.credentials.get(json)
+            await fetch('%s/complete_challenge_for_existing_key', { method: 'POST', body: JSON.stringify({
+              id: barraytoa(result.rawId),
+              authenticatorData: barraytoa(result.response.authenticatorData),
+              clientDataJSON: barraytoa(result.response.clientDataJSON),
+              signature: barraytoa(result.response.signature)
+            }), headers:{ 'Content-Type': 'application/json' }})
+            window.location.href = "/"
+        }
+        catch(err) {
+            // If verification failed, prompt to authorize a new key.
+            await configure();
+        }
     }
-    if (json.error == 'not_configured') {
-        configure();
+    else if (json.error == 'not_configured') {
+        await configure();
     }
 })()
 </script>
